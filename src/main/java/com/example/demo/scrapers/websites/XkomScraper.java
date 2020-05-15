@@ -1,4 +1,4 @@
-package com.example.demo.scrapers;
+package com.example.demo.scrapers.websites;
 
 import com.example.demo.model.Item;
 import org.jsoup.Jsoup;
@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XkomScraper implements Scraper{
+public class XkomScraper implements Scraper {
     private List<Item> items;
     private final String websiteName;
 

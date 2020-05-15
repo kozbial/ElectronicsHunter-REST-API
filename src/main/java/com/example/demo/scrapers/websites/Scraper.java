@@ -1,4 +1,4 @@
-package com.example.demo.scrapers;
+package com.example.demo.scrapers.websites;
 
 import com.example.demo.model.Item;
 import org.jsoup.nodes.Element;

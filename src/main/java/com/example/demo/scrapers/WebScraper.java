@@ -1,6 +1,8 @@
 package com.example.demo.scrapers;
 
 import com.example.demo.model.Item;
+import com.example.demo.scrapers.websites.MoreleScraper;
+import com.example.demo.scrapers.websites.XkomScraper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +14,6 @@ public class WebScraper {
     private List<Item> itemsFound;
     private XkomScraper xkomScraper;
     private MoreleScraper moreleScraper;
-    // todo
     // media expert
     // media markt
     // rtveuroagd
