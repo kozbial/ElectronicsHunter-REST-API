@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WebScraper {
-    private List<Item> itemsFound;
+    //private List<Item> itemsFound;
     private XkomScraper xkomScraper;
     private MoreleScraper moreleScraper;
     // media expert
@@ -19,18 +19,17 @@ public class WebScraper {
     // rtveuroagd
 
     public WebScraper(){
-        this.itemsFound = new ArrayList<>();
+        //this.itemsFound = new ArrayList<>();
         this.xkomScraper = new XkomScraper();
         this.moreleScraper = new MoreleScraper();
     }
 
+    // merge lists of found items from different scrapers
     public List<Item> findItems(String itemName){
-        this.itemsFound = Stream.of(xkomScraper.searchForItems(itemName),
+        return Stream.of(xkomScraper.searchForItems(itemName),
                 moreleScraper.searchForItems(itemName))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
-
-        return this.itemsFound;
     }
 
 }

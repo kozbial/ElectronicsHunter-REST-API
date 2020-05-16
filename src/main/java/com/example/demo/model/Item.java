@@ -3,7 +3,7 @@ package com.example.demo.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "items")
+@Table(name = "items", uniqueConstraints = @UniqueConstraint(columnNames = {"href"}))
 public class Item {
 
     @Id

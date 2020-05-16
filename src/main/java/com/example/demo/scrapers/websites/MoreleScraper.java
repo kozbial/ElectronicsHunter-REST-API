@@ -18,12 +18,12 @@ public class MoreleScraper implements Scraper {
     }
 
     @Override
-    public List<Item> searchForItems(String ItemName) {
-        final String url = "https://www.morele.net/wyszukiwarka/0/0/,,,,,,,,,,,,/1/?q=" + formatItemName(ItemName);
+    public List<Item> searchForItems(String itemName) {
+        final String url = "https://www.morele.net/wyszukiwarka/0/0/,,,,,,,,,,,,/1/?q=" + formatItemName(itemName);
         try{
             final Document moreleWebsite = Jsoup.connect(url).get();
-            for(Element row : moreleWebsite.select("div.cat-Item.card")){
-                Item item = new Item(websiteName, getItemPrice(row), getItemName(row), getItemRef(row));
+            for(Element row : moreleWebsite.select("div.cat-product.card")){
+                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row));
                 this.items.add(item);
             }
         }
@@ -35,22 +35,22 @@ public class MoreleScraper implements Scraper {
 
     @Override
     public String getItemPrice(Element row) {
-        return row.attr("data-Item-price");
+        return row.attr("data-product-price");
     }
 
     @Override
     public String getItemName(Element row) {
-        return row.attr("data-Item-name");
+        return row.attr("data-product-name");
     }
 
     @Override
     public String getItemRef(Element row) {
-        return "https://morele.net" + row.select("a.cat-Item-image.ItemLink").attr("href");
+        return "https://morele.net" + row.select("a.cat-product-image.productLink").attr("href");
     }
 
     @Override
-    public String formatItemName(String ItemName) {
-        return ItemName.replace(" ","+");
+    public String formatItemName(String itemName) {
+        return itemName.replace(" ","+");
     }
 
     @Override

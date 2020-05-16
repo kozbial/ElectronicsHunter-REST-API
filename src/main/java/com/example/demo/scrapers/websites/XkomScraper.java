@@ -23,7 +23,7 @@ public class XkomScraper implements Scraper {
         try{
             final Document xkomWebsite = Jsoup.connect(url).get();
             for(Element row : xkomWebsite.select("div.sc-1yu46qn-7.ewNluy.sc-2ride2-0.efeHma")){
-                Item item = new Item(websiteName, getItemPrice(row), getItemName(row), getItemRef(row));
+                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row));
                 items.add(item);
             }
         }

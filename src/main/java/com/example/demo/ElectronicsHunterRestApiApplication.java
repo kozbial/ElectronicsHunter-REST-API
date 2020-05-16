@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.scrapers.WebScraper;
+import com.example.demo.scrapers.websites.MoreleScraper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
