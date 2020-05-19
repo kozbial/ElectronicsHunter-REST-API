@@ -12,13 +12,19 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    List<Item> findByNameContaining(String name);
+    //add max/min price update
+    @Modifying
+    @Query(value = "INSERT INTO items(shop_name, name, price, href, max_price, min_price) VALUES (:shopName, :name, :productPrice, :productHref, :productPrice, :productPrice) ON CONFLICT (href) DO UPDATE SET price = :productPrice WHERE items.href = :productHref", nativeQuery = true)
+    @Transactional
+    void saveUniqueItems(@Param("shopName")String shopName, @Param("name") String name, @Param("productPrice") double productPrice, @Param("productHref") String productHref);
 
     @Modifying
-    @Query(nativeQuery = true, value = "INSERT INTO items(shop_name,name,price,href) VALUES (?1,?2,?3,?4) ON CONFLICT DO NOTHING")
+    @Query(value = "UPDATE items SET max_price = CASE WHEN max_price < :productPrice THEN :productPrice ELSE max_price end, min_price = CASE WHEN min_price > :productPrice THEN :productPrice ELSE min_price end WHERE href = :productHref", nativeQuery = true)
     @Transactional
-    void saveUniqueItems(String shopName, String name, String price, String href);
+    void updateMinAndMaxPrice(@Param("productHref") String productHref, @Param("productPrice") double productPrice);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM items WHERE UPPER(name) LIKE :itemName")
+    @Query(value = "SELECT * FROM items WHERE UPPER(name) LIKE :itemName", nativeQuery = true)
     List<Item> findByName(@Param("itemName") String itemName);
+
+
 }

@@ -34,7 +34,7 @@ public class XkomScraper implements Scraper {
     }
 
     @Override
-    public String getItemPrice(Element row){
+    public double getItemPrice(Element row){
         final String price;
 
         // check if there is a discount price for the Item
@@ -44,7 +44,7 @@ public class XkomScraper implements Scraper {
         else{
             price = row.select("span.sc-6n68ef-0.sc-6n68ef-3.iertXt").text();
         }
-        return price;
+        return formatItemPrice(price);
     }
 
     @Override
@@ -60,6 +60,12 @@ public class XkomScraper implements Scraper {
     @Override
     public String formatItemName(String ItemName){
         return ItemName.replace(" ", "%20");
+    }
+
+    @Override
+    public double formatItemPrice(String itemPrice){
+        String formattedPrice = itemPrice.replace(",", ".").replace("\\D", "");
+        return Double.parseDouble(formattedPrice.replaceAll("[^\\d.]",""));
     }
 
     @Override

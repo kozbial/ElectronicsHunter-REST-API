@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,13 @@ public class ItemController {
     private ItemRepository itemRepository;
 
     //get all items
-    @GetMapping("items")
+    @GetMapping("/items")
     public List<Item> getAllItems(){
         return this.itemRepository.findAll();
     }
 
     // get item by id
-    @GetMapping("/items/{id}")
+    @GetMapping("/item/{id}")
     @ApiOperation("Get the item with specific id")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Item.class)})
     public ResponseEntity<Item> getItemById(@PathVariable(value = "id") Long itemId) throws ResourceNotFoundException {
@@ -41,10 +42,11 @@ public class ItemController {
         return ResponseEntity.ok().body(item);
     }
 
-
-
-    @GetMapping("/item/{name}")
+    @GetMapping("/items/{name}")
     public ResponseEntity<List<Item>> getItemsByName(@PathVariable(value = "name") String itemName) throws ResourceNotFoundException {
+        // if searched phrase is in history search call findByName, cause all of items are updated every 2 hours
+        // else call webScraper to search and save unique found items
+
         List<Item> itemsFound = itemRepository.findByName(itemName.toUpperCase());
         if(itemsFound.size() == 0){
             WebScraper scraper = new WebScraper();
@@ -52,6 +54,7 @@ public class ItemController {
             for(Item item: itemsFound){
                 try {
                     itemRepository.saveUniqueItems(item.getShopName(),item.getName(),item.getPrice(),item.getHref());
+                    itemRepository.updateMinAndMaxPrice(item.getHref(), item.getPrice());
                 }
                 catch(DataIntegrityViolationException ignored){
                 }
@@ -61,12 +64,12 @@ public class ItemController {
     }
 
     // save item
-    @PostMapping("items")
+    @PostMapping("/items")
     public Item addItem(@RequestBody Item item){
         return this.itemRepository.save(item);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public void deleteAll(){
         this.itemRepository.deleteAll();
     }

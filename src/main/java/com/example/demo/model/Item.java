@@ -17,7 +17,13 @@ public class Item {
     private String name;
 
     @Column(name = "price")
-    private String price;
+    private double price;
+
+    @Column(name = "max_price")
+    private double maxPrice;
+
+    @Column(name = "min_price")
+    private double minPrice;
 
     @Column(name = "href")
     private String href;
@@ -26,11 +32,13 @@ public class Item {
         super();
     }
 
-    public Item(String shopName, String name, String price, String href) {
+    public Item(String shopName, String name, double price, String href) {
         super();
         this.shopName = shopName;
         this.name = name;
         this.price = price;
+        this.minPrice = price;
+        this.maxPrice = price;
         this.href = href;
     }
 
@@ -58,11 +66,11 @@ public class Item {
         this.name = name;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -72,6 +80,22 @@ public class Item {
 
     public void setHref(String href) {
         this.href = href;
+    }
+
+    public double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(double maxPrice) {
+        this.maxPrice = maxPrice;
+    }
+
+    public double getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(double mixPrice) {
+        this.minPrice = mixPrice;
     }
 
     public void showItem(){

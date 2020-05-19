@@ -34,8 +34,9 @@ public class MoreleScraper implements Scraper {
     }
 
     @Override
-    public String getItemPrice(Element row) {
-        return row.attr("data-product-price");
+    public double getItemPrice(Element row) {
+        String price = row.attr("data-product-price");
+        return formatItemPrice(price);
     }
 
     @Override
@@ -51,6 +52,12 @@ public class MoreleScraper implements Scraper {
     @Override
     public String formatItemName(String itemName) {
         return itemName.replace(" ","+");
+    }
+
+    @Override
+    public double formatItemPrice(String itemPrice) {
+        String formattedPrice = itemPrice.replace("\\D", "");
+        return Double.parseDouble(formattedPrice.replace(",", "."));
     }
 
     @Override
