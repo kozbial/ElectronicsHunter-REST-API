@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class SearchHistoryController {
-    @Autowired
-    private SearchHistoryRepository searchHistoryRepository;
+    private final SearchHistoryRepository searchHistoryRepository;
+
+    public SearchHistoryController(SearchHistoryRepository searchHistoryRepository) {
+        this.searchHistoryRepository = searchHistoryRepository;
+    }
 
     // save history entry
     @PostMapping("history")
