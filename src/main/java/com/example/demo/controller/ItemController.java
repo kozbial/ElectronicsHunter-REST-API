@@ -51,6 +51,11 @@ public class ItemController {
         else throw new ResourceNotFoundException("No corresponding items found for this name ::" + itemName);
     }
 
+    @GetMapping("/href/{href}")
+    public ResponseEntity<Item> getCurrentItemPrice(@PathVariable(value = "href") String href){
+        return new ResponseEntity<>(this.itemService.getItemWithUpdatedPrice(href), HttpStatus.OK);
+    }
+
     @PostMapping("/store")
     public ResponseEntity<Item> addItem(@RequestBody Item item){
         return new ResponseEntity<>(itemService.storeItem(item), HttpStatus.CREATED);

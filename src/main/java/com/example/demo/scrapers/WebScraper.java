@@ -31,4 +31,20 @@ public class WebScraper {
                     .collect(Collectors.toList());
     }
 
+    public double getCurrentItemPrice(Item item){
+        double itemPrice;
+        switch(item.getShopName()){
+            case "xkom":
+                itemPrice = xkomScraper.getItemPriceByHref(item.getHref());
+                break;
+            case "morele":
+                itemPrice = moreleScraper.getItemPriceByHref(item.getHref());
+                break;
+            default:
+                System.out.println("Scraper for " + item.getShopName() + " not found.");
+                return item.getPrice();
+        }
+        return itemPrice;
+    }
+
 }

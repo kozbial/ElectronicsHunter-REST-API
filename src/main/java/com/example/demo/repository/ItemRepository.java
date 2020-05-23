@@ -21,7 +21,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Modifying
     @Query(value = "UPDATE items SET max_price = CASE WHEN max_price < :productPrice THEN :productPrice ELSE max_price end, min_price = CASE WHEN min_price > :productPrice THEN :productPrice ELSE min_price end, price = CASE WHEN price != :productPrice THEN :productPrice ELSE price end WHERE href = :productHref", nativeQuery = true)
     @Transactional
-    void updateMinAndMaxPrice(@Param("productHref") String productHref, @Param("productPrice") double productPrice);
+    void updatePrices(@Param("productHref") String productHref, @Param("productPrice") double productPrice);
 
     @Query(value = "SELECT * FROM items WHERE UPPER(name) LIKE '%' || :itemName || '%'", nativeQuery = true)
     List<Item> findItemsByName(@Param("itemName") String itemName);
@@ -32,5 +32,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = "SELECT min_price FROM items WHERE href = :href", nativeQuery = true)
     double getMinPriceByHref(@Param("href") String href);
 
+    Item getItemByHref(String href);
 
 }

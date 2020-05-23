@@ -34,6 +34,19 @@ public class MoreleScraper implements Scraper {
     }
 
     @Override
+    public double getItemPriceByHref(String href){
+        double itemPrice = 0;
+        try{
+            final Document moreleWebsite = Jsoup.connect(href).get();
+            itemPrice = formatItemPrice(moreleWebsite.select("div.price-new").attr("content"));
+        }
+        catch(Exception ex){
+            System.out.println("Failed to get price of item.");
+        }
+        return itemPrice;
+    }
+
+    @Override
     public double getItemPrice(Element row) {
         String price = row.attr("data-product-price");
         return formatItemPrice(price);

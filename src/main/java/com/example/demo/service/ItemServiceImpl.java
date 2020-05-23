@@ -16,11 +16,13 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
     private SearchHistoryRepository searchHistoryRepository;
+    private WebScraper scraper;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository, SearchHistoryRepository searchHistoryRepository){
         this.itemRepository = itemRepository;
         this.searchHistoryRepository = searchHistoryRepository;
+        this.scraper = new WebScraper();
     }
 
     @Override
@@ -31,17 +33,26 @@ public class ItemServiceImpl implements ItemService {
         }
         else{
             searchHistoryRepository.saveAndFlush(new SearchHistoryEntry(new Date(), itemName));
-            WebScraper scraper = new WebScraper();
-            itemsFound = scraper.findItems(itemName);
+            itemsFound = this.scraper.findItems(itemName);
             for(Item item: itemsFound){
                 itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref());
-                itemRepository.updateMinAndMaxPrice(item.getHref(), item.getPrice());
+                itemRepository.updatePrices(item.getHref(), item.getPrice());
 
                 item.setMinPrice(itemRepository.getMinPriceByHref(item.getHref()));
                 item.setMaxPrice(itemRepository.getMaxPriceByHref(item.getHref()));
             }
         }
         return itemsFound;
+    }
+
+    @Override
+    public Item getItemWithUpdatedPrice(String href){
+        Item item = itemRepository.getItemByHref(href);
+        item.setPrice(this.scraper.getCurrentItemPrice(item));
+        itemRepository.updatePrices(item.getHref(), item.getPrice());
+        item.setMinPrice(itemRepository.getMinPriceByHref(item.getHref()));
+        item.setMaxPrice(itemRepository.getMaxPriceByHref(item.getHref()));
+        return item;
     }
 
     @Override
@@ -65,4 +76,6 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getAllItems(){
         return itemRepository.findAll();
     }
+
+
 }

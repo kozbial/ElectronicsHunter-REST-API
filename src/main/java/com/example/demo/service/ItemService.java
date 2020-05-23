@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface ItemService {
     List<Item> getAllItems();
     List<Item> getItemsByName(String itemName);
+    Item getItemWithUpdatedPrice(String href);
     Optional<Item> getItemById(Long id);
     Item storeItem(Item item);
     void deleteAllData();

@@ -7,6 +7,7 @@ import java.util.List;
 public interface Scraper {
     List<Item> searchForItems(String itemName);
     double getItemPrice(Element row);
+    double getItemPriceByHref(String href);
     String getItemName(Element row);
     String getItemRef(Element row);
 

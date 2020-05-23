@@ -48,6 +48,19 @@ public class XkomScraper implements Scraper {
     }
 
     @Override
+    public double getItemPriceByHref(String href){
+        double itemPrice = 0;
+        try{
+            final Document xkomWebsite = Jsoup.connect(href).get();
+            itemPrice = formatItemPrice(xkomWebsite.select("div.u7xnnm-4.iVazGO").text());
+        }
+        catch(Exception ex){
+            System.out.println("Failed to get price of item.");
+        }
+        return itemPrice;
+    }
+
+    @Override
     public String getItemName(Element row){
         return row.select("h3.sc-1yu46qn-12.edAUTq.sc-16zrtke-0.hovdBk").text();
     }
