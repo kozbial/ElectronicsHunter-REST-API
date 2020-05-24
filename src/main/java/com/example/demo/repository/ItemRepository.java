@@ -32,6 +32,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = "SELECT min_price FROM items WHERE href = :href", nativeQuery = true)
     double getMinPriceByHref(@Param("href") String href);
 
-    Item getItemByHref(String href);
+    @Query(value = "SELECT * FROM items WHERE href = :href", nativeQuery = true)
+    Item getItemByHref(@Param("href") String href);
+
+    Item getItemByName(String name);
 
 }

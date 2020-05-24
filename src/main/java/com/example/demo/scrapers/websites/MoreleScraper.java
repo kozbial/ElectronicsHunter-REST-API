@@ -41,7 +41,7 @@ public class MoreleScraper implements Scraper {
             itemPrice = formatItemPrice(moreleWebsite.select("div.price-new").attr("content"));
         }
         catch(Exception ex){
-            System.out.println("Failed to get price of item.");
+            System.out.println("Failed to get price of item " + this.websiteName);
         }
         return itemPrice;
     }

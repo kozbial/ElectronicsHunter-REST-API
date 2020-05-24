@@ -55,7 +55,7 @@ public class XkomScraper implements Scraper {
             itemPrice = formatItemPrice(xkomWebsite.select("div.u7xnnm-4.iVazGO").text());
         }
         catch(Exception ex){
-            System.out.println("Failed to get price of item.");
+            System.out.println("Failed to get price of item " + this.websiteName);
         }
         return itemPrice;
     }
@@ -71,8 +71,8 @@ public class XkomScraper implements Scraper {
     }
 
     @Override
-    public String formatItemName(String ItemName){
-        return ItemName.replace(" ", "%20");
+    public String formatItemName(String itemName){
+        return itemName.replace(" ", "%20");
     }
 
     @Override

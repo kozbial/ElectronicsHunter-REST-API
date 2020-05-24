@@ -1,6 +1,7 @@
 package com.example.demo.scrapers;
 
 import com.example.demo.model.Item;
+import com.example.demo.scrapers.websites.MediaexpertScraper;
 import com.example.demo.scrapers.websites.MoreleScraper;
 import com.example.demo.scrapers.websites.XkomScraper;
 
@@ -14,19 +15,22 @@ public class WebScraper {
 
     private XkomScraper xkomScraper;
     private MoreleScraper moreleScraper;
-    // media expert
-    // media markt
+    private MediaexpertScraper mediaexpertScraper;
     // rtveuroagd
 
     public WebScraper(){
         this.xkomScraper = new XkomScraper();
         this.moreleScraper = new MoreleScraper();
+        this.mediaexpertScraper = new MediaexpertScraper();
     }
 
     // merge lists of found items from different scrapers
     public List<Item> findItems(String itemName){
-        return Stream.of(xkomScraper.searchForItems(itemName),
-                moreleScraper.searchForItems(itemName))
+        return Stream.of(
+                xkomScraper.searchForItems(itemName),
+                moreleScraper.searchForItems(itemName),
+                mediaexpertScraper.searchForItems(itemName)
+        )
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
     }
@@ -39,6 +43,9 @@ public class WebScraper {
                 break;
             case "morele":
                 itemPrice = moreleScraper.getItemPriceByHref(item.getHref());
+                break;
+            case "mediaexpert":
+                itemPrice = mediaexpertScraper.getItemPriceByHref(item.getHref());
                 break;
             default:
                 System.out.println("Scraper for " + item.getShopName() + " not found.");
