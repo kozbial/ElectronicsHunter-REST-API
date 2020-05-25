@@ -35,7 +35,7 @@ public class MediaexpertScraper implements Scraper{
 
     @Override
     public double getItemPrice(Element row) {
-        String price = row.select("div.c-offerBox_price.is-normalPrice").select("span.a-price_price").text()+row.select("div.c-offerBox_price.is-normalPrice").select("span.a-price_rest").text();
+        String price = row.select("div.c-offerBox_price.is-normalPrice").select("span.a-price_price").text() + row.select("div.c-offerBox_price.is-normalPrice").select("span.a-price_rest").text();
         return formatItemPrice(price);
     }
 

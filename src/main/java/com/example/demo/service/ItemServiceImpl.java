@@ -28,21 +28,15 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItemsByName(String itemName) {
         List<Item> itemsFound;
-        if(searchHistoryRepository.findByEntryText(itemName)){
-            itemsFound = itemRepository.findItemsByName(itemName.toUpperCase());
-        }
-        else{
+        if(!searchHistoryRepository.findByEntryText(itemName)){
             searchHistoryRepository.saveAndFlush(new SearchHistoryEntry(new Date(), itemName));
             itemsFound = this.scraper.findItems(itemName);
-            for(Item item: itemsFound){
+            for(Item item: itemsFound) {
                 itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref());
                 itemRepository.updatePrices(item.getHref(), item.getPrice());
-
-                item.setMinPrice(itemRepository.getMinPriceByHref(item.getHref()));
-                item.setMaxPrice(itemRepository.getMaxPriceByHref(item.getHref()));
             }
         }
-        return itemsFound;
+        return itemRepository.searchItemsByName(itemName);
     }
 
     @Override

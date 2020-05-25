@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Item;
+import com.example.demo.model.SearchHistoryEntry;
 import com.example.demo.repository.ItemRepository;
+import com.example.demo.repository.SearchHistoryRepository;
 import com.example.demo.scrapers.WebScraper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +22,29 @@ public class DatabaseUpdateTask {
 
     private WebScraper scraper;
     private ItemRepository itemRepository;
+    private SearchHistoryRepository searchHistoryRepository;
 
     @Autowired
-    public DatabaseUpdateTask(ItemRepository itemRepository){
+    public DatabaseUpdateTask(ItemRepository itemRepository, SearchHistoryRepository searchHistoryRepository){
         this.itemRepository = itemRepository;
+        this.searchHistoryRepository = searchHistoryRepository;
         this.scraper = new WebScraper();
     }
 
     @Scheduled(fixedRate = 7200000L)
     public void updateItemsDatabase(){
-        List<Item> allItems = itemRepository.findAll();
-        if(allItems.size() != 0) {
-            for (Item item : allItems) {
-                itemRepository.updatePrices(item.getHref(), scraper.getCurrentItemPrice(item));
+        List<SearchHistoryEntry> searchHistory = this.searchHistoryRepository.findAll();
+        List<Item> foundItems;
+        log.info("database update started on {}", dateFormat.format(new Date()));
+        if(searchHistory.size() != 0) {
+            for (SearchHistoryEntry searchHistoryEntry : searchHistory) {
+                foundItems = scraper.findItems(searchHistoryEntry.getEntryText());
+                if(foundItems.size() !=0) {
+                    for (Item item: foundItems) {
+                        itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref());
+                        itemRepository.updatePrices(item.getHref(), item.getPrice());
+                    }
+                }
             }
             log.info("database update performed on {}", dateFormat.format(new Date()));
         }

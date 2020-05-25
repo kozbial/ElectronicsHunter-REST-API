@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SearchHistoryRepository extends JpaRepository<SearchHistoryEntry, Long> {
+
     @Query(value = "select case when (count(*) > 0) then true else false end from search_history where exists(select * from search_history where entry_text = :entryText)", nativeQuery = true)
     boolean findByEntryText(@Param("entryText") String entryText);
 }

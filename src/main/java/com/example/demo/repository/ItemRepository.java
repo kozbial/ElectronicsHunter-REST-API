@@ -23,9 +23,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Transactional
     void updatePrices(@Param("productHref") String productHref, @Param("productPrice") double productPrice);
 
-    @Query(value = "SELECT * FROM items WHERE UPPER(name) LIKE '%' || :itemName || '%'", nativeQuery = true)
-    List<Item> findItemsByName(@Param("itemName") String itemName);
-
     @Query(value = "SELECT max_price FROM items WHERE href = :href", nativeQuery = true)
     double getMaxPriceByHref(@Param("href") String href);
 
@@ -35,6 +32,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = "SELECT * FROM items WHERE href = :href", nativeQuery = true)
     Item getItemByHref(@Param("href") String href);
 
-    Item getItemByName(String name);
+    @Query(value = "SELECT * FROM items WHERE to_tsvector(UPPER(items.name)) @@@ plainto_tsquery(:name) ORDER BY items.price", nativeQuery = true)
+    List<Item> searchItemsByName(String name);
 
 }

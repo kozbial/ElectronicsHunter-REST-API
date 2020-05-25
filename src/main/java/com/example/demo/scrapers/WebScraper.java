@@ -29,8 +29,7 @@ public class WebScraper {
         return Stream.of(
                 xkomScraper.searchForItems(itemName),
                 moreleScraper.searchForItems(itemName),
-                mediaexpertScraper.searchForItems(itemName)
-        )
+                mediaexpertScraper.searchForItems(itemName))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
     }

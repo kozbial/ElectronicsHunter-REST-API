@@ -4,6 +4,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Item;
 
 import com.example.demo.service.ItemService;
+import com.example.demo.service.ItemServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,10 +22,10 @@ import java.util.List;
 @Api(value = "ItemsControllerAPI", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemServiceImpl itemService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemServiceImpl itemService) {
         this.itemService = itemService;
     }
 
@@ -40,7 +41,7 @@ public class ItemController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = Item.class)})
     public ResponseEntity<Item> getItemById(@PathVariable(value = "id") Long itemId) throws ResourceNotFoundException {
         Item item = itemService.getItemById(itemId)
-                .orElseThrow(()-> new ResourceNotFoundException("Item not found for this id :: "+ itemId));
+                .orElseThrow(()-> new ResourceNotFoundException("Item not found for this id  "+ itemId));
         return ResponseEntity.ok().body(item);
     }
 
@@ -48,7 +49,7 @@ public class ItemController {
     public ResponseEntity<List<Item>> getItemsByName(@PathVariable(value = "name") String itemName) throws ResourceNotFoundException {
         List<Item> itemsFound = itemService.getItemsByName(itemName);
         if(itemsFound.size() != 0) return new ResponseEntity<>(itemsFound, HttpStatus.OK);
-        else throw new ResourceNotFoundException("No corresponding items found for this name ::" + itemName);
+        else throw new ResourceNotFoundException("No corresponding items found for that name " + itemName);
     }
 
     @GetMapping("/href")

@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class ElectronicsHunterRestApiApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(ElectronicsHunterRestApiApplication.class, args);
     }
