@@ -41,7 +41,7 @@ public class DatabaseUpdateTask {
                 foundItems = scraper.findItems(searchHistoryEntry.getEntryText());
                 if(foundItems.size() !=0) {
                     for (Item item: foundItems) {
-                        itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref());
+                        itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref(), item.getImageHref());
                         itemRepository.updatePrices(item.getHref(), item.getPrice());
                     }
                 }

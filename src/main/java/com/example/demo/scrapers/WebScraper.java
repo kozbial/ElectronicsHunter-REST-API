@@ -16,7 +16,6 @@ public class WebScraper {
     private XkomScraper xkomScraper;
     private MoreleScraper moreleScraper;
     private MediaexpertScraper mediaexpertScraper;
-    // rtveuroagd
 
     public WebScraper(){
         this.xkomScraper = new XkomScraper();

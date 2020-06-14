@@ -23,7 +23,7 @@ public class XkomScraper implements Scraper {
         try{
             final Document xkomWebsite = Jsoup.connect(url).get();
             for(Element row : xkomWebsite.select("div.sc-1yu46qn-7.ewNluy.sc-2ride2-0.efeHma")){
-                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row));
+                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row), getItemImageHref(row));
                 items.add(item);
             }
         }
@@ -67,7 +67,7 @@ public class XkomScraper implements Scraper {
 
     @Override
     public String getItemRef(Element row){
-        return "https://x-kom.pl" + row.select("a.sc-1yu46qn-10.jegHIK.sc-4ttund-0.kTcxmb").attr("href");
+        return "https://x-kom.pl" + row.select("a.sc-1h16fat-0.dEoadv").attr("href");
     }
 
     @Override
@@ -86,6 +86,11 @@ public class XkomScraper implements Scraper {
         for(Item Item : this.items){
             Item.showItem();
         }
+    }
+
+    @Override
+    public String getItemImageHref(Element row){
+        return row.select("img.sc-1tblmgq-1.bxjRuC").attr("src");
     }
 
     public List<Item> getItems() {

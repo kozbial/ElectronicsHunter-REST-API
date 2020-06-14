@@ -8,6 +8,7 @@ import com.example.demo.scrapers.WebScraper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class ItemServiceImpl implements ItemService {
             searchHistoryRepository.saveAndFlush(new SearchHistoryEntry(new Date(), itemName));
             itemsFound = this.scraper.findItems(itemName);
             for(Item item: itemsFound) {
-                itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref());
+                itemRepository.saveUniqueItems(item.getShopName(), item.getName(), item.getPrice(), item.getHref(), item.getImageHref());
                 itemRepository.updatePrices(item.getHref(), item.getPrice());
             }
         }
@@ -47,6 +48,16 @@ public class ItemServiceImpl implements ItemService {
         item.setMinPrice(itemRepository.getMinPriceByHref(item.getHref()));
         item.setMaxPrice(itemRepository.getMaxPriceByHref(item.getHref()));
         return item;
+    }
+
+    @Override
+    public List<Item> getItemsByHrefs(List<String> hrefs){
+        List<Item> itemsFound = new ArrayList<>();
+        for(String href: hrefs){
+            Item item = getItemWithUpdatedPrice(href);
+            itemsFound.add(item);
+        }
+        return itemsFound;
     }
 
     @Override

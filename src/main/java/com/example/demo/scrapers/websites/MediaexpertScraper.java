@@ -4,6 +4,7 @@ import com.example.demo.model.Item;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,12 @@ public class MediaexpertScraper implements Scraper{
         try{
             final Document mediaexpertWebsite = Jsoup.connect(url).get();
             for(Element row : mediaexpertWebsite.select("div.c-offerBox.is-wide.is-available")){
-                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row));
+                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row), getItemImageHref(row));
                 this.items.add(item);
             }
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            System.out.println("Could not search for items at " + this.websiteName + " page");
         }
         return this.items;
     }
@@ -61,6 +62,26 @@ public class MediaexpertScraper implements Scraper{
     public String getItemRef(Element row) {
         return "https://mediaexpert.pl" + row.select("a.a-typo.is-secondary").attr("href");
     }
+
+
+
+
+
+
+    @Override
+    public String getItemImageHref(Element row){
+        Element resultLink = row.select("div.c-offerBox_galleryItem > a > img").first();
+        if(resultLink.attr("src").equals("")){
+            return "https://mediaexpert.pl" + resultLink.attr("data-src");
+        }
+        return "https://mediaexpert.pl" + resultLink.attr("src");
+    }
+
+
+
+
+
+
 
     @Override
     public String formatItemName(String itemName) {

@@ -13,5 +13,6 @@ public interface Scraper {
 
     String formatItemName(String itemName);
     double formatItemPrice(String itemPrice);
+    String getItemImageHref(Element row);
     void printItems(); //debugging method
 }

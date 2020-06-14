@@ -31,11 +31,14 @@ public class Item {
     @Column(name = "href")
     private String href;
 
+    @Column(name = "image_href")
+    private String imageHref;
+
     public Item(){
         super();
     }
 
-    public Item(String shopName, String name, double price, String href) {
+    public Item(String shopName, String name, double price, String href, String imageHref) {
         super();
         this.shopName = shopName;
         this.name = name;
@@ -43,6 +46,7 @@ public class Item {
         this.minPrice = price;
         this.maxPrice = price;
         this.href = href;
+        this.imageHref = imageHref;
     }
 
     public long getId() {
@@ -105,4 +109,5 @@ public class Item {
         System.out.println(this.getName() + " " + this.getPrice() + " " + this.getHref());
     }
 
+    public String getImageHref() { return imageHref; }
 }

@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Item;
 
-import com.example.demo.service.ItemService;
 import com.example.demo.service.ItemServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,8 +52,17 @@ public class ItemController {
     }
 
     @GetMapping("/href")
-    public ResponseEntity<Item> getCurrentItemPrice(@RequestParam String value){
-        return new ResponseEntity<>(this.itemService.getItemWithUpdatedPrice(value), HttpStatus.OK);
+    public ResponseEntity<Item> getCurrentItemPrice(@RequestParam String href){
+        return new ResponseEntity<>(this.itemService.getItemWithUpdatedPrice(href), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/hrefs/{hrefs}")
+    public ResponseEntity<List<Item>> getItemsByHrefs(@PathVariable(value = "hrefs") List<String> hrefs) throws ResourceNotFoundException {
+        List<Item> itemsFound = itemService.getItemsByHrefs(hrefs);
+        if(itemsFound.size() != 0) return new ResponseEntity<>(itemsFound, HttpStatus.OK);
+        else throw new ResourceNotFoundException("No corresponding items found for given hrefs");
+
     }
 
     @PostMapping("/store")

@@ -23,12 +23,12 @@ public class MoreleScraper implements Scraper {
         try{
             final Document moreleWebsite = Jsoup.connect(url).get();
             for(Element row : moreleWebsite.select("div.cat-product.card")){
-                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row));
+                Item item = new Item(websiteName, getItemName(row), getItemPrice(row), getItemRef(row), getItemImageHref(row));
                 this.items.add(item);
             }
         }
         catch(Exception ex){
-            ex.printStackTrace();
+            System.out.println("Could not search for items at " + this.websiteName + " page");
         }
         return this.items;
     }
@@ -74,9 +74,15 @@ public class MoreleScraper implements Scraper {
     }
 
     @Override
+    public String getItemImageHref(Element row) {
+        return row.select("img.product-image").attr("src");
+    }
+
+    @Override
     public void printItems() {
         for(Item Item : this.items){
             Item.showItem();
         }
     }
+
 }

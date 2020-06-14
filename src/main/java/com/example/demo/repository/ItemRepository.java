@@ -14,9 +14,9 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Modifying
-    @Query(value = "INSERT INTO items(shop_name, name, price, href, max_price, min_price) VALUES (:shopName, :name, :productPrice, :productHref, :productPrice, :productPrice) ON CONFLICT (href) DO UPDATE SET price = :productPrice WHERE items.href = :productHref", nativeQuery = true)
+    @Query(value = "INSERT INTO items(shop_name, name, price, href, max_price, min_price, image_href) VALUES (:shopName, :name, :productPrice, :productHref, :productPrice, :productPrice, :imageHref) ON CONFLICT (href) DO UPDATE SET price = :productPrice WHERE items.href = :productHref", nativeQuery = true)
     @Transactional
-    void saveUniqueItems(@Param("shopName")String shopName, @Param("name") String name, @Param("productPrice") double productPrice, @Param("productHref") String productHref);
+    void saveUniqueItems(@Param("shopName")String shopName, @Param("name") String name, @Param("productPrice") double productPrice, @Param("productHref") String productHref, @Param("imageHref") String imageHref);
 
     @Modifying
     @Query(value = "UPDATE items SET max_price = CASE WHEN max_price < :productPrice THEN :productPrice ELSE max_price end, min_price = CASE WHEN min_price > :productPrice THEN :productPrice ELSE min_price end, price = CASE WHEN price != :productPrice THEN :productPrice ELSE price end WHERE href = :productHref", nativeQuery = true)
@@ -34,5 +34,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query(value = "SELECT * FROM items WHERE to_tsvector(UPPER(items.name)) @@@ plainto_tsquery(:name) ORDER BY items.price", nativeQuery = true)
     List<Item> searchItemsByName(String name);
-
 }
